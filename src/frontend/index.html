@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ RITUAL ⊙ - Hermetic LLM Context Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="ritual-header">
+            <div class="logo">
+                <span class="symbol">⊙</span>
+                <h1>RITUAL</h1>
+                <span class="subtitle">Hermetic Context Management</span>
+            </div>
+            <div class="connection-status">
+                <span class="status-dot"></span>
+                <span class="status-text">Initializing...</span>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="ritual-nav">
+            <button class="nav-btn active" data-view="dashboard">
+                <span class="icon">◈</span>
+                Dashboard
+            </button>
+            <button class="nav-btn" data-view="grimoire">
+                <span class="icon">📜</span>
+                Grimoire
+            </button>
+            <button class="nav-btn" data-view="sigils">
+                <span class="icon">🗝️</span>
+                Sigils
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="ritual-main">
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view active">
+                <div class="dashboard-grid">
+                    <div class="card providers-card">
+                        <h2>◇ LLM Connections</h2>
+                        <div id="providers-list" class="providers-list">
+                            <div class="loading">Discovering providers...</div>
+                        </div>
+                    </div>
+
+                    <div class="card quick-actions">
+                        <h2>◇ Quick Actions</h2>
+                        <div class="actions-grid">
+                            <button class="action-btn" id="btn-new-context">
+                                <span class="icon">✦</span>
+                                New Context
+                            </button>
+                            <button class="action-btn" id="btn-refresh-providers">
+                                <span class="icon">↻</span>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card recent-contexts">
+                        <h2>◇ Recent Contexts</h2>
+                        <div id="recent-files" class="recent-list">
+                            <div class="empty-state">No contexts yet</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grimoire View -->
+            <section id="grimoire" class="view">
+                <div class="grimoire-header">
+                    <h2>◇ The Grimoire</h2>
+                    <button class="btn-primary" id="btn-create-mcm">+ New Entry</button>
+                </div>
+                <div id="mcm-files-grid" class="mcm-grid">
+                    <div class="loading">Loading grimoire...</div>
+                </div>
+            </section>
+
+            <!-- Sigils View -->
+            <section id="sigils" class="view">
+                <div class="sigils-header">
+                    <h2>◇ Sigils</h2>
+                    <button class="btn-primary" id="btn-add-sigil">+ Add Sigil</button>
+                </div>
+                <div id="sigils-list" class="sigils-grid">
+                    <div class="loading">Loading sigils...</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modals -->
+        <div id="modal-overlay" class="modal-overlay hidden">
+            <!-- MCM Editor Modal -->
+            <div id="mcm-modal" class="modal hidden">
+                <div class="modal-header">
+                    <h3>◇ Edit Context</h3>
+                    <button class="close-btn">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="mcm-name">Name</label>
+                        <input type="text" id="mcm-name" placeholder="Context name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="mcm-content">Content</label>
+                        <textarea id="mcm-content" rows="10" placeholder="Enter context content..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" id="btn-cancel-mcm">Cancel</button>
+                    <button class="btn-primary" id="btn-save-mcm">Save</button>
+                </div>
+            </div>
+
+            <!-- Sigil Modal -->
+            <div id="sigil-modal" class="modal hidden">
+                <div class="modal-header">
+                    <h3>◇ Add Sigil</h3>
+                    <button class="close-btn">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="sigil-name">Name</label>
+                        <input type="text" id="sigil-name" placeholder="API key name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="sigil-provider">Provider</label>
+                        <select id="sigil-provider">
+                            <option value="lm-studio">LM Studio</option>
+                            <option value="msty">MSTY</option>
+                            <option value="openai">OpenAI</option>
+                            <option value="anthropic">Anthropic</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sigil-key">API Key</label>
+                        <input type="password" id="sigil-key" placeholder="Enter API key...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" id="btn-cancel-sigil">Cancel</button>
+                    <button class="btn-primary" id="btn-save-sigil">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

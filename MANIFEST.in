@@ -1,0 +1,12 @@
+include README.md
+include LICENSE
+include CHANGELOG.md
+include requirements.txt
+include setup.py
+include pyproject.toml
+include config/default-config.json
+recursive-include src/backend *.py
+recursive-include src/frontend *.html *.css *.js
+recursive-include docs *.md
+recursive-include docs/examples *.json
+recursive-include docs/screenshots *.png

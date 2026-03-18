@@ -1,0 +1,17 @@
+# RITUAL - Hermetic LLM Context Management Portal
+# Core Dependencies
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+pyyaml==6.0.1
+cryptography==41.0.7
+requests==2.31.0
+slowapi==0.1.9
+
+# Development Dependencies
+pytest>=7.4.0
+pytest-cov>=4.1.0
+httpx>=0.25.0
+black>=23.0.0
+flake8>=6.0.0
+isort>=5.12.0
