@@ -44,13 +44,12 @@ dev = [
 ]
 
 [project.scripts]
-ritual = "backend.main:main"
+ritual = "src.backend.main:main"
 
 [tool.setuptools]
-package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
 
 [tool.black]
 line-length = 100

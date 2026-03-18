@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 # Define paths
-ritual_dir = Path(r"c:\Users\lord ones\Documents\GitHub\ritual")
+ritual_dir = Path(__file__).parent
 mcm_portal_dir = ritual_dir / "mcm-portal"
 app_dir = mcm_portal_dir / "app"
 static_dir = app_dir / "static"
@@ -340,5 +340,5 @@ for file_path, content in files_to_create.items():
     file_path.write_text(content)
     print(f"✓ {file_path.name}")
 
-print("\\n✨ MCM Portal project structure created successfully!")
+print("\n✨ MCM Portal project structure created successfully!")
 print(f"Location: {mcm_portal_dir}")

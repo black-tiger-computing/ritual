@@ -1,0 +1,1 @@
+"""RITUAL - Source package."""

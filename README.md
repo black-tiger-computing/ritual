@@ -1,11 +1,15 @@
 # ⊙ RITUAL ⊙
 
 <p align="center">
+  <img src="docs/images/ritual-hero.png" alt="RITUAL - Hermetic LLM Context Portal" width="800">
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+">
   <img src="https://img.shields.io/badge/fastapi-0.104-green.svg" alt="FastAPI">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
-  <a href="https://github.com/ritual-lang/ritual/stargazers"><img src="https://img.shields.io/github/stars/ritual-lang/ritual.svg" alt="Stars"></a>
-  <a href="https://github.com/ritual-lang/ritual/actions"><img src="https://github.com/ritual-lang/ritual/workflows/Tests/badge.svg" alt="Build Status"></a>
+  <a href="https://github.com/black-tiger-computing/ritual/stargazers"><img src="https://img.shields.io/github/stars/black-tiger-computing/ritual.svg" alt="Stars"></a>
+  <a href="https://github.com/black-tiger-computing/ritual/actions"><img src="https://github.com/black-tiger-computing/ritual/workflows/Tests/badge.svg" alt="Build Status"></a>
 </p>
 
 > **Hermetic LLM Context Management Portal** — A beautiful, performant local portal for managing MCM files and LLM connections with mystical aesthetics.
@@ -27,7 +31,7 @@ RITUAL is a lightweight API and Model Context Management (MCM) local server desi
 
 ```bash
 # Clone the repository
-git clone https://github.com/ritual-lang/ritual.git
+git clone https://github.com/black-tiger-computing/ritual.git
 cd ritual
 
 # Install dependencies
