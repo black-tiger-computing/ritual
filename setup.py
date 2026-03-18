@@ -16,7 +16,7 @@ setup(
     description="Hermetic LLM Context Management Portal",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/ritual-lang/ritual",
+    url="https://github.com/black-tiger-computing/ritual",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     classifiers=[

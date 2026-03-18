@@ -25,6 +25,7 @@ class StorageManager:
         self.mcm_dir = self.data_dir / "mcm-files"
         self.sigils_file = self.data_dir / "sigils.json"
         self._encryption_key: Optional[bytes] = None
+        self._cipher: Optional[Fernet] = None
 
         # Initialize directories
         self._init_storage()

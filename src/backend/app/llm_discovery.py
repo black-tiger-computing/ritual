@@ -64,6 +64,8 @@ def discover_llm_providers(config) -> List[LLMProvider]:
 
 def check_provider_connection(provider: LLMProvider) -> bool:
     """Check if a specific provider is connected."""
+    if not provider.enabled:
+        return False
     return provider.check_connection()
 
 

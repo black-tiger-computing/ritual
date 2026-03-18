@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RITUAL — Hermetic LLM Context Management Portal. A beautiful, performant local portal for managing MCM files and LLM connections.">
+  <title>⊙ RITUAL ⊙ — Hermetic LLM Context Management Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#">⊙ RITUAL ⊙</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
+        <li><a href="#docs">Documentation</a></li>
+        <li><a href="https://github.com/black-tiger-computing/ritual" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-image-wrapper">
+        <img
+          src="images/ritual-hero.png"
+          alt="RITUAL — Hermetic Portal"
+          class="hero-img"
+          onerror="this.style.display='none'"
+        >
+      </div>
+      <h1 class="hero-title">⊙ RITUAL ⊙</h1>
+      <p class="hero-subtitle">Hermetic LLM Context Management Portal</p>
+      <p class="hero-tagline">
+        A beautiful, performant local portal for managing MCM files and LLM connections
+        with mystical aesthetics — built on FastAPI, running entirely offline.
+      </p>
+      <div class="hero-actions">
+        <a href="#quickstart" class="btn btn-primary">⊕ Get Started</a>
+        <a href="https://github.com/black-tiger-computing/ritual" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+          View on GitHub
+        </a>
+      </div>
+      <div class="hero-badges">
+        <img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+">
+        <img src="https://img.shields.io/badge/fastapi-0.104-green.svg" alt="FastAPI">
+        <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
+        <img src="https://github.com/black-tiger-computing/ritual/workflows/Tests/badge.svg" alt="Tests">
+      </div>
+    </div>
+  </header>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <h2 class="section-title">✨ Key Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <span class="feature-icon">⊙</span>
+          <h3>One-Button Interface</h3>
+          <p>Simplify your workflow with elegant, focused simplicity. Everything you need, nothing you don't.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔮</span>
+          <h3>Mystical Aesthetic</h3>
+          <p>Unique hermetic visual design that elevates LLM context management into an experience.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">⚡</span>
+          <h3>60fps Animations</h3>
+          <p>Smooth, buttery UI transitions powered by CSS3 and Vanilla JavaScript.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔒</span>
+          <h3>Local-Only Design</h3>
+          <p>No cloud dependencies. Your data never leaves your machine. Full privacy guaranteed.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🛡️</span>
+          <h3>Encrypted Storage</h3>
+          <p>API keys and sensitive data are encrypted at rest using Fernet symmetric encryption.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🐍</span>
+          <h3>Python-Powered</h3>
+          <p>Built on FastAPI for reliability, speed, and a clean REST API you can build on.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start -->
+  <section class="section section-dark" id="quickstart">
+    <div class="container">
+      <h2 class="section-title">🚀 Quick Start</h2>
+      <div class="quickstart-steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <h3>Clone &amp; Install</h3>
+            <pre><code>git clone https://github.com/black-tiger-computing/ritual.git
+cd ritual
+pip install -r requirements.txt</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <h3>Start the Server</h3>
+            <pre><code>python -m src.backend.main</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <div class="step-content">
+            <h3>Open the Portal</h3>
+            <pre><code>http://localhost:8000</code></pre>
+          </div>
+        </div>
+      </div>
+      <p class="quickstart-note">
+        For detailed setup instructions, see the
+        <a href="INSTALLATION.html">Installation Guide</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Documentation -->
+  <section class="section" id="docs">
+    <div class="container">
+      <h2 class="section-title">📚 Documentation</h2>
+      <div class="doc-grid">
+        <a class="doc-card" href="INSTALLATION.html">
+          <span class="doc-icon">📖</span>
+          <h3>Installation Guide</h3>
+          <p>Setup instructions for Windows, Linux, and macOS.</p>
+        </a>
+        <a class="doc-card" href="USAGE.html">
+          <span class="doc-icon">📖</span>
+          <h3>User Guide</h3>
+          <p>Complete usage walkthrough for all features.</p>
+        </a>
+        <a class="doc-card" href="API.html">
+          <span class="doc-icon">🔧</span>
+          <h3>API Reference</h3>
+          <p>REST endpoints, request/response schemas, and examples.</p>
+        </a>
+        <a class="doc-card" href="ARCHITECTURE.html">
+          <span class="doc-icon">🏗️</span>
+          <h3>Architecture</h3>
+          <p>Technical design, module structure, and design decisions.</p>
+        </a>
+        <a class="doc-card" href="CONTRIBUTING.html">
+          <span class="doc-icon">🤝</span>
+          <h3>Contributing</h3>
+          <p>Developer guide, PR process, and contribution conventions.</p>
+        </a>
+        <a class="doc-card" href="CUSTOMIZATION.html">
+          <span class="doc-icon">🎨</span>
+          <h3>Customization</h3>
+          <p>Themes, extensions, and advanced configuration options.</p>
+        </a>
+        <a class="doc-card" href="TROUBLESHOOTING.html">
+          <span class="doc-icon">🔍</span>
+          <h3>Troubleshooting</h3>
+          <p>Common issues, error messages, and their solutions.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Built with 🔮 by <a href="https://github.com/black-tiger-computing" target="_blank" rel="noopener noreferrer">RITUAL Contributors</a></p>
+      <p>
+        <a href="https://github.com/black-tiger-computing/ritual" target="_blank" rel="noopener noreferrer">GitHub</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/black-tiger-computing/ritual/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/black-tiger-computing/ritual/issues" target="_blank" rel="noopener noreferrer">Issues</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    document.getElementById('nav-toggle').addEventListener('click', function () {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+      anchor.addEventListener('click', function (e) {
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

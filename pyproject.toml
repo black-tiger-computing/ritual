@@ -62,8 +62,8 @@ profile = "black"
 line_length = 100
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["src/backend/tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
-addopts = "--cov=backend --cov-report=html --cov-report=term"
+addopts = "--cov=src/backend --cov-report=html --cov-report=term"

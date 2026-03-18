@@ -1,0 +1,50 @@
+title: RITUAL
+description: Hermetic LLM Context Management Portal
+baseurl: "/ritual"
+url: "https://black-tiger-computing.github.io"
+
+theme: minima
+
+author:
+  name: RITUAL Contributors
+  email: contact@ritual-lang.dev
+
+repository: black-tiger-computing/ritual
+
+show_excerpts: true
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+nav_links:
+  - title: Home
+    url: /
+  - title: Installation
+    url: /INSTALLATION
+  - title: Usage
+    url: /USAGE
+  - title: API
+    url: /API
+  - title: Architecture
+    url: /ARCHITECTURE
+  - title: Contributing
+    url: /CONTRIBUTING
+  - title: Customization
+    url: /CUSTOMIZATION
+  - title: Troubleshooting
+    url: /TROUBLESHOOTING

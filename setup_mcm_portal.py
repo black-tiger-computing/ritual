@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 # Define paths
-ritual_dir = Path(r"c:\Users\lord ones\Documents\GitHub\ritual")
+ritual_dir = Path(__file__).parent.resolve()
 mcm_portal_dir = ritual_dir / "mcm-portal"
 app_dir = mcm_portal_dir / "app"
 static_dir = app_dir / "static"
