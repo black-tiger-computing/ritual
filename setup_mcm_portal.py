@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Setup MCM Portal project structure and copy files from HaleHound"""
-import shutil
-import json
+"""Setup MCM Portal project structure."""
+
 from pathlib import Path
 
-# Define paths
-ritual_dir = Path(r"c:\Users\lord ones\Documents\GitHub\ritual")
+# Define paths — use the directory containing this script as the root so the
+# script works regardless of where the repository is checked out.
+ritual_dir = Path(__file__).parent.resolve()
 mcm_portal_dir = ritual_dir / "mcm-portal"
 app_dir = mcm_portal_dir / "app"
 static_dir = app_dir / "static"
@@ -60,9 +60,7 @@ def main(host="127.0.0.1", port=8000, open_browser=True):
 if __name__ == "__main__":
     main()
 ''',
-    
     app_dir / "__init__.py": '"""MCM AI Portal Application Package"""',
-    
     app_dir / "config.py": '''"""Configuration Management"""
 import json
 from pathlib import Path
@@ -101,7 +99,6 @@ class AppConfig:
             val = val.get(k, {}) if isinstance(val, dict) else default
         return val if val != {} else default
 ''',
-    
     app_dir / "storage.py": '''"""Local Storage Management"""
 import json, yaml
 from pathlib import Path
@@ -190,7 +187,6 @@ class StorageManager:
             return True
         return False
 ''',
-    
     app_dir / "llm_discovery.py": '''"""LLM Auto-Discovery"""
 from typing import Dict, Any
 from app.config import AppConfig
@@ -228,7 +224,6 @@ class LLMDiscovery:
         self.discovered_llms = {"lm_studio": self.check_lm_studio(), "msty": self.check_msty()}
         return self.discovered_llms
 ''',
-    
     app_dir / "server.py": '''"""FastAPI Server Setup"""
 from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse
@@ -282,25 +277,23 @@ def create_app(config: AppConfig, storage: StorageManager) -> FastAPI:
     
     return app
 ''',
-    
-    static_dir / "index.html": '''<!DOCTYPE html>
+    static_dir / "index.html": """<!DOCTYPE html>
 <html><head><meta charset="UTF-8"><title>Ritual - Hermetic Portal</title><link rel="stylesheet" href="/static/style.css"></head>
 <body><div class="container"><header class="header"><h1>⊙ RITUAL ⊙</h1><p>Hermetic LLM Context Portal</p></header>
 <button class="btn btn-primary" onclick="alert('Portal activated!')">⊕ SUMMON INTERFACE ⊕</button></div>
-<script src="/static/app.js"></script></body></html>''',
-    
-    static_dir / "style.css": '''*{margin:0;padding:0;box-sizing:border-box;}
+<script src="/static/app.js"></script></body></html>""",
+    static_dir
+    / "style.css": """*{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:Georgia,serif;background:linear-gradient(-45deg,#1a0033,#2d0052,#0f1747,#3d1066);color:#e0d5ff;min-height:100vh;}
 .container{max-width:1200px;margin:0 auto;padding:20px;}
 .header{background:rgba(20,5,50,0.7);padding:40px;border-radius:12px;text-align:center;}
 .header h1{font-size:3em;background:linear-gradient(135deg,#6e7eea,#b266ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .btn{padding:14px 28px;border:none;border-radius:6px;cursor:pointer;text-transform:uppercase;}
-.btn-primary{background:linear-gradient(135deg,rgba(102,126,234,0.7),rgba(178,102,255,0.5));color:#fff;}''',
-    
-    static_dir / "app.js": '''const API_BASE = '/api';
-fetch(API_BASE + '/portal/status').then(r => r.json()).then(d => console.log('MCM Portal Ready:', d)).catch(e => console.error('Error:', e));''',
-    
-    mcm_portal_dir / "requirements.txt": '''fastapi==0.104.1
+.btn-primary{background:linear-gradient(135deg,rgba(102,126,234,0.7),rgba(178,102,255,0.5));color:#fff;}""",
+    static_dir
+    / "app.js": """const API_BASE = '/api';
+fetch(API_BASE + '/portal/status').then(r => r.json()).then(d => console.log('MCM Portal Ready:', d)).catch(e => console.error('Error:', e));""",
+    mcm_portal_dir / "requirements.txt": """fastapi==0.104.1
 uvicorn==0.24.0
 pydantic==2.5.0
 pyyaml==6.0.1
@@ -308,30 +301,48 @@ cryptography==41.0.7
 aiohttp==3.9.1
 python-multipart==0.0.6
 requests==2.31.0
-''',
-    
-    mcm_portal_dir / "RUN_MCM_PORTAL.bat": '''@echo off
+""",
+    mcm_portal_dir / "RUN_MCM_PORTAL.bat": """@echo off
 python -m venv venv
 call venv\\Scripts\\activate.bat
 pip install -r requirements.txt
 start http://localhost:8000
 python main.py
 pause
-''',
-    
-    mcm_portal_dir / "README.md": '''# MCM AI Portal
+""",
+    mcm_portal_dir / "run_mcm_portal.sh": """#!/usr/bin/env bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python3 main.py &
+sleep 2 && open "http://localhost:8000" 2>/dev/null || xdg-open "http://localhost:8000" 2>/dev/null || true
+wait
+""",
+    mcm_portal_dir / "README.md": """# MCM AI Portal
 
 Web dashboard for managing MCM files, API keys, and LLM connections.
 
 ## Quick Start
-Double-click `RUN_MCM_PORTAL.bat`
+
+**Windows:** Double-click `RUN_MCM_PORTAL.bat`
+
+**Linux / macOS:**
+```bash
+bash run_mcm_portal.sh
+```
+
+**Manual:**
+```bash
+pip install -r requirements.txt
+python main.py
+```
 
 ## Features
 - MCM file management
-- Encrypted API key storage  
-- LLM auto-discovery
+- Encrypted API key storage
+- LLM auto-discovery (LM Studio, MSTY)
 - Real-time monitoring
-'''
+""",
 }
 
 # Create files
@@ -340,5 +351,12 @@ for file_path, content in files_to_create.items():
     file_path.write_text(content)
     print(f"✓ {file_path.name}")
 
-print("\\n✨ MCM Portal project structure created successfully!")
+# Make the shell script executable on POSIX systems
+run_sh = mcm_portal_dir / "run_mcm_portal.sh"
+if run_sh.exists():
+    import stat
+
+    run_sh.chmod(run_sh.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+print("\n✨ MCM Portal project structure created successfully!")
 print(f"Location: {mcm_portal_dir}")

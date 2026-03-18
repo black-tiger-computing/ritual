@@ -127,6 +127,12 @@ dmypy.json
 *.log
 config.local.json
 
+# MCM Portal generated output (created by setup_mcm_portal.py)
+mcm-portal/
+
+# Quick-patch working directory
+patch_output/
+
 # IDEs
 .vscode/
 .idea/

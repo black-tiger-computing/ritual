@@ -45,6 +45,7 @@ dev = [
 
 [project.scripts]
 ritual = "backend.main:main"
+ritual-patch = "ritual_quick_patch:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
