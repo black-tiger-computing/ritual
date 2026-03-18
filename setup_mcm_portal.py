@@ -298,8 +298,8 @@ uvicorn==0.24.0
 pydantic==2.5.0
 pyyaml==6.0.1
 cryptography==41.0.7
-aiohttp==3.9.1
-python-multipart==0.0.6
+aiohttp==3.13.3
+python-multipart==0.0.22
 requests==2.31.0
 """,
     mcm_portal_dir / "RUN_MCM_PORTAL.bat": """@echo off
