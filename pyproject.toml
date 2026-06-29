@@ -5,19 +5,24 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ritual"
 version = "1.0.0"
-description = "Hermetic LLM Context Management Portal"
+description = "4-Tier MCP Memory Portal - LLM Context Management System"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "RITUAL Contributors", email = "contact@ritual-lang.dev"}
+    {name = "Black Tiger Computing", email = "dev@blacktigercomputing.com"},
+    {name = "Lead Developer: sonamcgoo"},
 ]
-keywords = ["llm", "context-management", "mcm", "fastapi", "portal", "mystical", "hermetic"]
+maintainers = [
+    {name = "Lead Designer: OpenHands Agent"},
+]
+keywords = ["llm", "context-management", "mcp", "fastapi", "portal", "memory", "ai"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -26,12 +31,12 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
 ]
 dependencies = [
-    "fastapi==0.104.1",
-    "uvicorn==0.24.0",
-    "pydantic==2.5.0",
-    "pyyaml==6.0.1",
-    "cryptography==41.0.7",
-    "requests==2.31.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "pydantic>=2.5.0",
+    "pyyaml>=6.0.0",
+    "cryptography>=41.0.0",
+    "requests>=2.31.0",
 ]
 
 [project.optional-dependencies]

@@ -33,8 +33,8 @@ class User:
 
 def get_github_config() -> tuple[str, str]:
     """Get GitHub OAuth config from env."""
-    client_id = "Iv1.placeholder"  # Replace with actual GitHub OAuth App client ID
-    client_secret = ""  # Set via GITHUB_CLIENT_SECRET env var
+    client_id = os.getenv("GITHUB_CLIENT_ID", "")
+    client_secret = os.getenv("GITHUB_CLIENT_SECRET", "")
     return client_id, client_secret
 
 

@@ -1,85 +1,115 @@
-# ⊙ RITUAL ⊙
+# RITUAL
+
+**4-Tier MCP Memory Portal** — A clean, minimal interface for managing LLM context and memory systems.
 
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+">
   <img src="https://img.shields.io/badge/fastapi-0.104-green.svg" alt="FastAPI">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
-  <a href="https://github.com/ritual-lang/ritual/stargazers"><img src="https://img.shields.io/github/stars/ritual-lang/ritual.svg" alt="Stars"></a>
-  <a href="https://github.com/ritual-lang/ritual/actions"><img src="https://github.com/ritual-lang/ritual/workflows/Tests/badge.svg" alt="Build Status"></a>
 </p>
 
-> **Hermetic LLM Context Management Portal** — A beautiful, performant local portal for managing MCM files and LLM connections with mystical aesthetics.
+## Overview
 
-## ✨ What is RITUAL?
+RITUAL is a local web portal for managing a 4-tier MCP (Model Context Protocol) memory system. It provides:
 
-RITUAL is a lightweight API and Model Context Management (MCM) local server designed for LM Studio and MSTY. It provides a **one-button interface** with stunning hermetic/mystical aesthetics, making LLM context management not just functional, but beautiful.
+- **Dashboard** — Overview of memory stats across all tiers
+- **Memory Management** — Create, edit, delete memory entries
+- **API Key Storage** — Secure encrypted storage for provider keys
+- **Model Discovery** — Browse and manage available models
 
-### 🎯 Key Features
+### Architecture
 
-- **⊙ One-Button Interface** — Simplify your workflow with elegant simplicity
-- **🔮 Mystical Aesthetic** — Unique visual design that stands out from the crowd
-- **⚡ 60fps Animations** — Smooth, buttery-smooth UI transitions
-- **🔒 Local-Only Design** — No cloud dependencies, full privacy guaranteed
-- **🛡️ Zero External Dependencies** — Minimal, lightweight implementation
-- **🐍 Python-Powered** — Built on FastAPI for reliability and speed
+```
+┌─────────────────────────────────────────────┐
+│              RITUAL Portal                   │
+├──────────┬──────────┬──────────┬────────────┤
+│ Tier 0   │ Tier 1   │ Tier 2   │ Tier 3     │
+│Personality│ Context │ Frequent │ Archive    │
+└──────────┴──────────┴──────────┴────────────┘
+                    │
+              MCP Server ← LLM Applications
+```
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/ritual-lang/ritual.git
-cd ritual
-
 # Install dependencies
 pip install -r requirements.txt
 
 # Run the server
-python -m src.backend.main
+python src/backend/main.py
+
+# Open browser
+# http://localhost:8765
 ```
 
-Then open your browser to `http://localhost:8000`
+### Docker
 
-## 📸 Screenshots
+```bash
+docker-compose up -d
+```
 
-| Dashboard | Grimoire | Sigils |
-|-----------|----------|--------|
-| ![Dashboard](./docs/screenshots/dashboard.png) | ![Grimoire](./docs/screenshots/grimoire.png) | ![Sigils](./docs/screenshots/sigils.png) |
+### Windows Executable
 
-## 📚 Documentation
+```bash
+python build_exe.py
+# Run: dist/RITUAL.exe
+# Or: run_ritual.bat
+```
 
-- [📖 Installation Guide](./docs/INSTALLATION.md) — Setup instructions for all platforms
-- [📖 User Guide](./docs/USAGE.md) — Complete usage walkthrough
-- [🏗️ Architecture](./docs/ARCHITECTURE.md) — Technical design and API reference
-- [🤝 Contributing](./docs/CONTRIBUTING.md) — Developer guide and PR process
-- [🔧 API Reference](./docs/API.md) — REST endpoints and examples
-- [🎨 Customization](./docs/CUSTOMIZATION.md) — Themes and extensions
-- [🔍 Troubleshooting](./docs/TROUBLESHOOTING.md) — Common issues and solutions
+## Configuration
 
-## 📦 Tech Stack
+| Environment Variable | Description | Default |
+|---------------------|-------------|---------|
+| `PORT` | Server port | `8765` |
+| `GITHUB_CLIENT_ID` | GitHub OAuth client ID | — |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth secret | — |
+| `ENCRYPTION_KEY` | 32-byte key for API key encryption | auto-generated |
+| `DATA_DIR` | Storage directory | `./data` |
 
-| Layer | Technology |
-|-------|------------|
+## Project Structure
+
+```
+ritual/
+├── src/
+│   ├── backend/
+│   │   ├── main.py          # Entry point
+│   │   └── app/
+│   │       ├── mcp.py       # MCP server
+│   │       ├── mcp_routes.py # API endpoints
+│   │       ├── key_manager.py # Key encryption
+│   │       └── model_discovery.py
+│   └── frontend/
+│       ├── index.html
+│       ├── style.css
+│       └── app.js
+├── docs/                    # Documentation
+├── build_exe.py            # Windows build script
+└── docker-compose.yml
+```
+
+## Credits
+
+**Software Company:** Black Tiger Computing
+
+**Development Team:**
+- **Lead Developer:** sonamcgoo
+- **Lead Designer:** OpenHands Agent
+- **Contributors:** OpenHands Agents (infrastructure, testing, documentation)
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|------------|
 | Backend | Python 3.10+, FastAPI, Uvicorn |
-| Frontend | HTML5, CSS3, Vanilla JavaScript |
-| Storage | JSON-based local storage |
-| Security | Cryptography for API key encryption |
+| Frontend | HTML5, CSS3, Vanilla JS |
+| Storage | JSON files |
+| Security | cryptography (Fernet) |
 
-## 🤝 Contributing
+## License
 
-We welcome contributions! Please see our [Contributing Guide](./docs/CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+MIT License — see [LICENSE](LICENSE)
 
 ---
 
-<p align="center">
-  <sub>Built with 🔮 by RITUAL Contributors</sub>
-</p>
+*Copyright (c) 2024 Black Tiger Computing*
