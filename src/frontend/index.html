@@ -3,156 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⊙ RITUAL ⊙ - Hermetic LLM Context Management</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+    <title>⊙ RITUAL ⊙ - 4-Tier MCP Memory Portal</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
-        <header class="ritual-header">
-            <div class="logo">
-                <span class="symbol">⊙</span>
-                <h1>RITUAL</h1>
-                <span class="subtitle">Hermetic Context Management</span>
+    <!-- Splash Screen -->
+    <div id="splash">
+        <div class="splash-content">
+            <div class="ritual-logo">
+                <div class="logo-ring ring-1"></div>
+                <div class="logo-ring ring-2"></div>
+                <div class="logo-ring ring-3"></div>
+                <span class="logo-symbol">⊙</span>
             </div>
-            <div class="connection-status">
-                <span class="status-dot"></span>
-                <span class="status-text">Initializing...</span>
+            <h1 class="splash-title">RITUAL</h1>
+            <p class="splash-subtitle">4-Tier MCP Memory Portal</p>
+            <div class="splash-tiers">
+                <span class="tier-label tier-0">🜃 Personality</span>
+                <span class="tier-label tier-1">☉ Context</span>
+                <span class="tier-label tier-2">☽ Frequent</span>
+                <span class="tier-label tier-3">☄ Archive</span>
             </div>
-        </header>
+        </div>
+    </div>
 
-        <!-- Navigation -->
-        <nav class="ritual-nav">
-            <button class="nav-btn active" data-view="dashboard">
-                <span class="icon">◈</span>
-                Dashboard
-            </button>
-            <button class="nav-btn" data-view="grimoire">
-                <span class="icon">📜</span>
-                Grimoire
-            </button>
-            <button class="nav-btn" data-view="sigils">
-                <span class="icon">🗝️</span>
-                Sigils
-            </button>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="ritual-main">
-            <!-- Dashboard View -->
-            <section id="dashboard" class="view active">
-                <div class="dashboard-grid">
-                    <div class="card providers-card">
-                        <h2>◇ LLM Connections</h2>
-                        <div id="providers-list" class="providers-list">
-                            <div class="loading">Discovering providers...</div>
-                        </div>
-                    </div>
-
-                    <div class="card quick-actions">
-                        <h2>◇ Quick Actions</h2>
-                        <div class="actions-grid">
-                            <button class="action-btn" id="btn-new-context">
-                                <span class="icon">✦</span>
-                                New Context
-                            </button>
-                            <button class="action-btn" id="btn-refresh-providers">
-                                <span class="icon">↻</span>
-                                Refresh
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card recent-contexts">
-                        <h2>◇ Recent Contexts</h2>
-                        <div id="recent-files" class="recent-list">
-                            <div class="empty-state">No contexts yet</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Grimoire View -->
-            <section id="grimoire" class="view">
-                <div class="grimoire-header">
-                    <h2>◇ The Grimoire</h2>
-                    <button class="btn-primary" id="btn-create-mcm">+ New Entry</button>
-                </div>
-                <div id="mcm-files-grid" class="mcm-grid">
-                    <div class="loading">Loading grimoire...</div>
-                </div>
-            </section>
-
-            <!-- Sigils View -->
-            <section id="sigils" class="view">
-                <div class="sigils-header">
-                    <h2>◇ Sigils</h2>
-                    <button class="btn-primary" id="btn-add-sigil">+ Add Sigil</button>
-                </div>
-                <div id="sigils-list" class="sigils-grid">
-                    <div class="loading">Loading sigils...</div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Modals -->
-        <div id="modal-overlay" class="modal-overlay hidden">
-            <!-- MCM Editor Modal -->
-            <div id="mcm-modal" class="modal hidden">
-                <div class="modal-header">
-                    <h3>◇ Edit Context</h3>
-                    <button class="close-btn">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="mcm-name">Name</label>
-                        <input type="text" id="mcm-name" placeholder="Context name...">
-                    </div>
-                    <div class="form-group">
-                        <label for="mcm-content">Content</label>
-                        <textarea id="mcm-content" rows="10" placeholder="Enter context content..."></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-secondary" id="btn-cancel-mcm">Cancel</button>
-                    <button class="btn-primary" id="btn-save-mcm">Save</button>
-                </div>
+    <!-- Login Screen -->
+    <div id="login" class="login-container hidden">
+        <div class="login-card">
+            <div class="ritual-logo-large">
+                <span class="logo-symbol">⊙</span>
             </div>
-
-            <!-- Sigil Modal -->
-            <div id="sigil-modal" class="modal hidden">
-                <div class="modal-header">
-                    <h3>◇ Add Sigil</h3>
-                    <button class="close-btn">×</button>
+            <h1>Welcome to RITUAL</h1>
+            <p>Hermetic LLM Context Management Portal</p>
+            
+            <div id="login-options">
+                <button id="btn-github-login" class="btn-github">
+                    <svg height="20" width="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    Sign in with GitHub
+                </button>
+            </div>
+            
+            <div id="login-hint" class="login-hint hidden">
+                <p>GitHub OAuth not configured</p>
+                <small>Set GITHUB_CLIENT_SECRET to enable login</small>
+                <button id="btn-skip-login" class="btn-secondary">Continue without login</button>
+            </div>
+            
+            <div class="login-features">
+                <div class="feature-item">
+                    <span class="feature-icon">🜃</span>
+                    <span>4-Tier Memory System</span>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="sigil-name">Name</label>
-                        <input type="text" id="sigil-name" placeholder="API key name...">
-                    </div>
-                    <div class="form-group">
-                        <label for="sigil-provider">Provider</label>
-                        <select id="sigil-provider">
-                            <option value="lm-studio">LM Studio</option>
-                            <option value="msty">MSTY</option>
-                            <option value="openai">OpenAI</option>
-                            <option value="anthropic">Anthropic</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="sigil-key">API Key</label>
-                        <input type="password" id="sigil-key" placeholder="Enter API key...">
-                    </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🗝</span>
+                    <span>Encrypted Key Storage</span>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn-secondary" id="btn-cancel-sigil">Cancel</button>
-                    <button class="btn-primary" id="btn-save-sigil">Save</button>
+                <div class="feature-item">
+                    <span class="feature-icon">☯</span>
+                    <span>Model Discovery</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Main App -->
+    <div id="app" class="app-container hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="ritual-logo-small">
+                    <span class="logo-symbol">⊙</span>
+                </div>
+                <h1 class="app-title">RITUAL</h1>
+            </div>
+            <div class="header-center">
+                <h2 id="page-title">Dashboard</h2>
+            </div>
+            <div class="header-right">
+                <div id="user-info" class="user-info hidden">
+                    <img id="user-avatar" class="user-avatar" src="" alt="avatar">
+                    <span id="user-name" class="user-name"></span>
+                </div>
+                <div class="connection-status">
+                    <span id="connection-badge" class="connection-badge"></span>
+                    <span class="connection-text">Initializing...</span>
+                </div>
+                <button id="btn-logout" class="btn-icon hidden" title="Logout">⊘</button>
+                <button id="btn-refresh" class="btn-icon" title="Refresh">↻</button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="app-nav">
+            <button class="nav-item active" data-view="dashboard">
+                <span class="nav-icon">◈</span>
+                <span class="nav-label">Dashboard</span>
+            </button>
+            <button class="nav-item" data-view="memory">
+                <span class="nav-icon">🜃</span>
+                <span class="nav-label">Memory</span>
+            </button>
+            <button class="nav-item" data-view="assistant">
+                <span class="nav-icon">✦</span>
+                <span class="nav-label">Engineer</span>
+            </button>
+            <button class="nav-item" data-view="keys">
+                <span class="nav-icon">🗝</span>
+                <span class="nav-label">Keys</span>
+            </button>
+            <button class="nav-item" data-view="models">
+                <span class="nav-icon">☯</span>
+                <span class="nav-label">Models</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view active">
+                <div class="dashboard-grid">
+                    <!-- Tier Stats -->
+                    <div class="card tier-stats">
+                        <h3>◇ MCP Tiers</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card tier-0">
+                                <span class="stat-symbol">🜃</span>
+                                <span class="stat-value" id="stat-tier-0">0</span>
+                                <span class="stat-label">Personality</span>
+                            </div>
+                            <div class="stat-card tier-1">
+                                <span class="stat-symbol">☉</span>
+                                <span class="stat-value" id="stat-tier-1">0</span>
+                                <span class="stat-label">Context</span>
+                            </div>
+                            <div class="stat-card tier-2">
+                                <span class="stat-symbol">☽</span>
+                                <span class="stat-value" id="stat-tier-2">0</span>
+                                <span class="stat-label">Frequent</span>
+                            </div>
+                            <div class="stat-card tier-3">
+                                <span class="stat-symbol">☄</span>
+                                <span class="stat-value" id="stat-tier-3">0</span>
+                                <span class="stat-label">Archive</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MCP Status -->
+                    <div class="card mcp-status-card">
+                        <h3>◇ System Status</h3>
+                        <div class="status-items">
+                            <div class="status-item">
+                                <span class="status-label">MCP System</span>
+                                <span class="status-value" id="mcp-status">Active</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Assistant</span>
+                                <span class="status-value" id="assistant-status">Loading...</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">API</span>
+                                <span class="status-value" id="api-status">Checking...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personality Preview -->
+                    <div class="card personality-card">
+                        <h3>◇ Personality Profile</h3>
+                        <div class="personality-preview">
+                            <p id="personality-preview">Loading personality...</p>
+                        </div>
+                        <button class="btn-secondary" onclick="document.querySelector('[data-view=memory]').click()">
+                            View Full Profile
+                        </button>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card quick-actions">
+                        <h3>◇ Quick Actions</h3>
+                        <div class="action-buttons">
+                            <button class="btn-primary" id="btn-create-memory">
+                                <span>+ New Memory</span>
+                            </button>
+                            <button class="btn-secondary" id="btn-add-key">
+                                <span>+ Add API Key</span>
+                            </button>
+                            <button class="btn-secondary" onclick="document.querySelector('[data-view=models]').click()">
+                                <span>Browse Models</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Memory View -->
+            <section id="memory" class="view">
+                <div class="memory-layout">
+                    <div class="memory-sidebar">
+                        <h3>◇ Filter by Tier</h3>
+                        <div class="filter-chips">
+                            <button class="filter-chip active" data-tier="all">All</button>
+                            <button class="filter-chip tier-0" data-tier="0">🜃 Personality</button>
+                            <button class="filter-chip tier-1" data-tier="1">☉ Context</button>
+                            <button class="filter-chip tier-2" data-tier="2">☽ Frequent</button>
+                            <button class="filter-chip tier-3" data-tier="3">☄ Archive</button>
+                        </div>
+                        <button class="btn-primary" id="btn-new-memory" style="margin-top: 1rem;">
+                            + New Memory
+                        </button>
+                    </div>
+                    <div class="memory-content">
+                        <div id="memories-grid" class="memories-grid">
+                            <div class="empty-state">
+                                <span class="empty-icon">🜃</span>
+                                <p>No memories yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assistant View -->
+            <section id="assistant" class="view">
+                <div class="assistant-layout">
+                    <div class="assistant-sidebar">
+                        <h3>◇ MCP Context</h3>
+                        <div class="context-preview">
+                            <h4>Personality</h4>
+                            <p id="personality-preview">Loading...</p>
+                            
+                            <h4>Context Memories</h4>
+                            <ul id="context-preview" class="preview-list"></ul>
+                            
+                            <h4>Frequent Patterns</h4>
+                            <ul id="frequent-preview" class="preview-list"></ul>
+                        </div>
+                    </div>
+                    <div class="assistant-main">
+                        <h3>◇ Prompt Engineer</h3>
+                        <div class="chat-container">
+                            <div id="chat-messages" class="chat-messages">
+                                <div class="welcome-card">
+                                    <span class="welcome-icon">✦</span>
+                                    <h4>Prompt Engineer Assistant</h4>
+                                    <p>Ask me anything about prompt engineering, context management, or how to optimize your LLM interactions.</p>
+                                    <div class="suggestion-chips">
+                                        <button class="suggestion-chip" data-prompt="Help me create a system prompt for a code reviewer">Code Reviewer</button>
+                                        <button class="suggestion-chip" data-prompt="What's chain-of-thought prompting?">CoT Explained</button>
+                                        <button class="suggestion-chip" data-prompt="Show me few-shot examples for classification">Few-Shot Help</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input-area">
+                                <textarea id="chat-input" placeholder="Ask the prompt engineer..." rows="1"></textarea>
+                                <button id="btn-send" class="btn-primary">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Keys View -->
+            <section id="keys" class="view">
+                <div class="keys-layout">
+                    <div class="keys-header">
+                        <h3>◇ API Key Storage</h3>
+                        <button class="btn-primary" id="btn-add-api-key">+ Add Key</button>
+                    </div>
+                    <div class="keys-stats">
+                        <div class="key-stat">
+                            <span class="key-stat-value" id="keys-total">0</span>
+                            <span class="key-stat-label">Total Keys</span>
+                        </div>
+                        <div class="key-stat">
+                            <span class="key-stat-value" id="keys-active">0</span>
+                            <span class="key-stat-label">Active</span>
+                        </div>
+                        <div class="key-stat">
+                            <span class="key-stat-value" id="keys-expired">0</span>
+                            <span class="key-stat-label">Expired</span>
+                        </div>
+                    </div>
+                    <div id="keys-list" class="keys-list">
+                        <div class="empty-state">
+                            <span class="empty-icon">🗝</span>
+                            <p>No API keys stored</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Models View -->
+            <section id="models" class="view">
+                <div class="models-layout">
+                    <div class="models-header">
+                        <h3>◇ Model Discovery</h3>
+                        <div class="model-search">
+                            <input type="text" id="model-search" placeholder="Search models...">
+                            <button class="btn-primary" id="btn-search-models">Search</button>
+                        </div>
+                    </div>
+                    <div class="models-section">
+                        <h4>Recommended for Local Inference</h4>
+                        <div id="recommended-models" class="models-grid">
+                            <div class="empty-state">
+                                <p>Loading recommended models...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="models-section">
+                        <h4>Search Results</h4>
+                        <div id="models-grid" class="models-grid">
+                            <div class="empty-state">
+                                <p>Search for models or browse recommendations above</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <!-- Memory Modal -->
+        <div id="memory-modal" class="modal hidden">
+            <div class="modal-header">
+                <h3 id="memory-modal-title">◇ New Memory</h3>
+                <button class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="memory-key">Key</label>
+                    <input type="text" id="memory-key" placeholder="e.g., preferred_model">
+                </div>
+                <div class="form-group">
+                    <label for="memory-content">Content</label>
+                    <textarea id="memory-content" rows="5" placeholder="Memory content..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="memory-tier">Tier</label>
+                    <select id="memory-tier">
+                        <option value="0">🜃 Personality</option>
+                        <option value="1" selected>☉ Context</option>
+                        <option value="2">☽ Frequent</option>
+                        <option value="3">☄ Archive</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="memory-tags">Tags (comma-separated)</label>
+                    <input type="text" id="memory-tags" placeholder="preference, style, project">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btn-cancel-memory">Cancel</button>
+                <button class="btn-primary" id="btn-save-memory">Save</button>
+            </div>
+        </div>
+
+        <!-- Key Modal -->
+        <div id="key-modal" class="modal hidden">
+            <div class="modal-header">
+                <h3>◇ Add API Key</h3>
+                <button class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="key-name">Name</label>
+                    <input type="text" id="key-name" placeholder="My API Key">
+                </div>
+                <div class="form-group">
+                    <label for="key-provider">Provider</label>
+                    <select id="key-provider">
+                        <option value="openai">OpenAI</option>
+                        <option value="anthropic">Anthropic</option>
+                        <option value="lm-studio">LM Studio</option>
+                        <option value="msty">MSTY</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="key-value">API Key</label>
+                    <input type="password" id="key-value" placeholder="sk-...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btn-cancel-key">Cancel</button>
+                <button class="btn-primary" id="btn-save-key">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
 </body>
 </html>

@@ -1,361 +1,345 @@
 /**
- * RITUAL - Hermetic LLM Context Management Portal
- * Frontend Application
+ * RITUAL - 4-Tier MCP Memory Portal
  */
 
-const API_BASE = '/api';
+const API = '';
 
-// State
+let currentUser = null;
 let currentView = 'dashboard';
-let editingMcmId = null;
-let mcmFiles = [];
-let sigils = [];
+let editingMemoryId = null;
+let memories = [];
+let keys = [];
 
-// DOM Elements
-const views = document.querySelectorAll('.view');
-const navButtons = document.querySelectorAll('.nav-btn');
-const modalOverlay = document.getElementById('modal-overlay');
-const statusDot = document.querySelector('.status-dot');
-const statusText = document.querySelector('.status-text');
-
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    initModals();
-    loadProviders();
-    loadMcmFiles();
-    loadSigils();
-    checkHealth();
+    initApp();
 });
 
-// Navigation
+async function initApp() {
+    // Check auth status first
+    await checkAuth();
+    
+    initNavigation();
+    initModals();
+    initAuth();
+    loadAll();
+    checkHealth();
+}
+
+async function checkAuth() {
+    const splash = document.getElementById('splash');
+    const login = document.getElementById('login');
+    const app = document.getElementById('app');
+    
+    try {
+        const res = await fetch('/auth/status');
+        const data = await res.json();
+        
+        splash.classList.add('fade-out');
+        
+        if (data.authenticated) {
+            currentUser = data;
+            showApp();
+        } else if (data.configured) {
+            login.classList.remove('hidden');
+        } else {
+            document.getElementById('login-hint')?.classList.remove('hidden');
+            document.getElementById('btn-github-login')?.classList.add('hidden');
+            login.classList.remove('hidden');
+        }
+    } catch (error) {
+        splash.classList.add('fade-out');
+        showApp();
+    }
+}
+
+function showApp() {
+    document.getElementById('app')?.classList.remove('hidden');
+    document.getElementById('app')?.classList.add('visible');
+    
+    if (currentUser) {
+        document.getElementById('user-info')?.classList.remove('hidden');
+        document.getElementById('user-name').textContent = currentUser.username;
+        if (currentUser.avatar_url) {
+            document.getElementById('user-avatar').src = currentUser.avatar_url;
+        }
+        document.getElementById('btn-logout')?.classList.remove('hidden');
+    }
+}
+
+function initAuth() {
+    document.getElementById('btn-github-login')?.addEventListener('click', () => {
+        window.location.href = '/auth/login';
+    });
+    
+    document.getElementById('btn-skip-login')?.addEventListener('click', () => {
+        showApp();
+    });
+    
+    document.getElementById('btn-logout')?.addEventListener('click', async () => {
+        await fetch('/auth/logout', {method: 'POST'});
+        window.location.reload();
+    });
+}
+
 function initNavigation() {
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const view = btn.dataset.view;
-            switchView(view);
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const view = item.dataset.view;
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            item.classList.add('active');
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(view)?.classList.add('active');
+            currentView = view;
+            if (view === 'memory') loadMemories();
+            if (view === 'keys') loadKeys();
+            if (view === 'models') loadModels();
         });
     });
 }
 
-function switchView(view) {
-    // Update nav buttons
-    navButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.view === view);
-    });
-
-    // Update views
-    views.forEach(v => {
-        v.classList.toggle('active', v.id === view);
-    });
-
-    currentView = view;
-
-    // Refresh data when switching views
-    if (view === 'grimoire') loadMcmFiles();
-    if (view === 'sigils') loadSigils();
-}
-
-// API Functions
 async function checkHealth() {
     try {
-        const response = await fetch(`${API_BASE}/health`);
+        const response = await fetch('/api/health');
         const data = await response.json();
-        if (data.status === 'ok') {
-            statusDot.classList.add('connected');
-            statusText.textContent = 'Connected';
+        document.getElementById('connection-badge')?.classList.toggle('connected', data.status === 'ok');
+        document.querySelector('.connection-text')?.setAttribute('data-status', data.status === 'ok' ? 'connected' : 'disconnected');
+    } catch (error) {}
+}
+
+async function loadAll() {
+    await loadMCPStats();
+    await loadKeys();
+}
+
+async function loadMCPStats() {
+    try {
+        const response = await fetch('/api/mcp/stats');
+        const data = await response.json();
+        document.getElementById('stat-tier-0').textContent = data.by_tier?.[0] || 0;
+        document.getElementById('stat-tier-1').textContent = data.by_tier?.[1] || 0;
+        document.getElementById('stat-tier-2').textContent = data.by_tier?.[2] || 0;
+        document.getElementById('stat-tier-3').textContent = data.by_tier?.[3] || 0;
+    } catch (error) {}
+}
+
+async function loadMemories(tier = null) {
+    const container = document.getElementById('memories-grid');
+    if (!container) return;
+    container.innerHTML = '<div class="empty-state"><p>Loading...</p></div>';
+    try {
+        const url = tier ? `/mcp/memories?tier=${tier}` : '/mcp/memories';
+        const response = await fetch(url);
+        const data = await response.json();
+        memories = data.memories || [];
+        renderMemories();
+        initFilters();
+        
+        // Update stats
+        const stats = data.by_tier || {};
+        document.getElementById('stat-tier-0').textContent = stats[0] || 0;
+        document.getElementById('stat-tier-1').textContent = stats[1] || 0;
+        document.getElementById('stat-tier-2').textContent = stats[2] || 0;
+        document.getElementById('stat-tier-3').textContent = stats[3] || 0;
+    } catch (error) {
+        container.innerHTML = '<div class="empty-state"><p>Failed to load</p></div>';
+    }
+}
+
+function renderMemories() {
+    const container = document.getElementById('memories-grid');
+    if (!container) return;
+    if (!memories.length) {
+        container.innerHTML = '<div class="empty-state"><p>No memories yet</p><button class="btn-primary" onclick="openMemoryModal()">+ Create First Memory</button></div>';
+        return;
+    }
+    const tierNames = ['Personality', 'Context', 'Frequent', 'Archive'];
+    const tierIcons = ['🜃', '☉', '☽', '☄'];
+    container.innerHTML = memories.map(m => `
+        <div class="memory-card tier-${m.tier}">
+            <div class="memory-header">
+                <span class="tier-badge tier-${m.tier}">${tierIcons[m.tier]} ${tierNames[m.tier]}</span>
+                <div class="memory-actions">
+                    <button class="btn-icon-sm" onclick="openMemoryModal('${m.id}')">✎</button>
+                    <button class="btn-icon-sm delete" onclick="deleteMemory('${m.id}')">×</button>
+                </div>
+            </div>
+            <h3 class="memory-key">${escapeHtml(m.key)}</h3>
+            <p class="memory-content">${escapeHtml(m.content?.substring(0, 150) || '')}${(m.content?.length || 0) > 150 ? '...' : ''}</p>
+            ${m.tags?.length ? `<div class="memory-tags">${m.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+            <div class="memory-meta">
+                <span>Access: ${m.access_count || 0}</span>
+                <span>Score: ${((m.elevation_score || 0) * 100).toFixed(0)}%</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openMemoryModal(id = null) {
+    const modal = document.getElementById('memory-modal');
+    const title = document.getElementById('memory-modal-title');
+    
+    if (id) {
+        const memory = memories.find(m => m.id === id);
+        if (memory) {
+            editingMemoryId = id;
+            document.getElementById('memory-key').value = memory.key || '';
+            document.getElementById('memory-content').value = memory.content || '';
+            document.getElementById('memory-tier').value = memory.tier || 1;
+            document.getElementById('memory-tags').value = (memory.tags || []).join(', ');
+            title.textContent = 'Edit Memory';
         }
-    } catch (error) {
-        statusDot.classList.add('disconnected');
-        statusText.textContent = 'Disconnected';
+    } else {
+        editingMemoryId = null;
+        document.getElementById('memory-key').value = '';
+        document.getElementById('memory-content').value = '';
+        document.getElementById('memory-tier').value = '1';
+        document.getElementById('memory-tags').value = '';
+        title.textContent = 'New Memory';
     }
-}
-
-async function loadProviders() {
-    try {
-        const response = await fetch(`${API_BASE}/providers`);
-        const data = await response.json();
-        renderProviders(data.providers);
-    } catch (error) {
-        console.error('Error loading providers:', error);
-        document.getElementById('providers-list').innerHTML = 
-            '<div class="error">Failed to load providers</div>';
-    }
-}
-
-async function loadMcmFiles() {
-    try {
-        const response = await fetch(`${API_BASE}/mcm-files`);
-        const data = await response.json();
-        mcmFiles = data.files;
-        renderMcmFiles();
-        renderRecentFiles();
-    } catch (error) {
-        console.error('Error loading MCM files:', error);
-    }
-}
-
-async function loadSigils() {
-    try {
-        const response = await fetch(`${API_BASE}/sigils`);
-        const data = await response.json();
-        sigils = data.sigils;
-        renderSigils();
-    } catch (error) {
-        console.error('Error loading sigils:', error);
-    }
-}
-
-// Render Functions
-function renderProviders(providers) {
-    const container = document.getElementById('providers-list');
     
-    if (!providers || providers.length === 0) {
-        container.innerHTML = '<div class="empty-state">No providers configured</div>';
-        return;
-    }
-
-    container.innerHTML = providers.map(p => `
-        <div class="provider-item">
-            <div class="provider-info">
-                <span class="provider-status ${p.status}"></span>
-                <span class="provider-name">${p.name}</span>
-            </div>
-            <span class="provider-url">${p.url}</span>
-        </div>
-    `).join('');
+    showModal('memory-modal');
 }
 
-function renderMcmFiles() {
-    const container = document.getElementById('mcm-files-grid');
+async function saveMemory() {
+    const key = document.getElementById('memory-key').value.trim();
+    const content = document.getElementById('memory-content').value;
+    const tier = parseInt(document.getElementById('memory-tier').value);
+    const tags = document.getElementById('memory-tags').value.split(',').map(t => t.trim()).filter(Boolean);
     
-    if (!mcmFiles || mcmFiles.length === 0) {
-        container.innerHTML = '<div class="empty-state">The Grimoire is empty. Create your first entry!</div>';
-        return;
-    }
-
-    container.innerHTML = mcmFiles.map(file => `
-        <div class="mcm-card" data-id="${file.id}">
-            <div class="mcm-title">${escapeHtml(file.name)}</div>
-            <div class="mcm-preview">${escapeHtml(file.content.substring(0, 150))}...</div>
-            <div class="mcm-meta">
-                <span>Created: ${formatDate(file.created_at)}</span>
-                <span>Updated: ${formatDate(file.updated_at)}</span>
-            </div>
-            <div class="mcm-actions">
-                <button onclick="editMcm('${file.id}')">Edit</button>
-                <button class="delete" onclick="deleteMcm('${file.id}')">Delete</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-function renderRecentFiles() {
-    const container = document.getElementById('recent-files');
-    
-    if (!mcmFiles || mcmFiles.length === 0) {
-        container.innerHTML = '<div class="empty-state">No contexts yet</div>';
-        return;
-    }
-
-    const recent = mcmFiles.slice(0, 5);
-    container.innerHTML = recent.map(file => `
-        <div class="recent-item" onclick="editMcm('${file.id}')">
-            <strong>${escapeHtml(file.name)}</strong>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">
-                ${formatDate(file.updated_at)}
-            </div>
-        </div>
-    `).join('');
-}
-
-function renderSigils() {
-    const container = document.getElementById('sigils-list');
-    
-    if (!sigils || sigils.length === 0) {
-        container.innerHTML = '<div class="empty-state">No sigils stored. Add your first API key!</div>';
-        return;
-    }
-
-    container.innerHTML = sigils.map(sigil => `
-        <div class="sigil-card">
-            <div class="sigil-icon">🗝️</div>
-            <div class="sigil-name">${escapeHtml(sigil.name)}</div>
-            <div class="sigil-provider">${escapeHtml(sigil.provider)}</div>
-            <div class="sigil-created">Created: ${formatDate(sigil.created_at)}</div>
-            <div class="mcm-actions">
-                <button class="delete" onclick="deleteSigil('${sigil.id}')">Delete</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// MCM Actions
-function createMcm() {
-    editingMcmId = null;
-    document.getElementById('mcm-name').value = '';
-    document.getElementById('mcm-content').value = '';
-    showModal('mcm-modal');
-}
-
-function editMcm(id) {
-    const file = mcmFiles.find(f => f.id === id);
-    if (!file) return;
-
-    editingMcmId = id;
-    document.getElementById('mcm-name').value = file.name;
-    document.getElementById('mcm-content').value = file.content;
-    showModal('mcm-modal');
-}
-
-async function saveMcm() {
-    const name = document.getElementById('mcm-name').value.trim();
-    const content = document.getElementById('mcm-content').value;
-
-    if (!name) {
-        alert('Please enter a name');
+    if (!key) {
+        alert('Please enter a key');
         return;
     }
 
     try {
-        if (editingMcmId) {
-            await fetch(`${API_BASE}/mcm-files/${editingMcmId}`, {
+        if (editingMemoryId) {
+            await fetch(`/mcp/memories/${editingMemoryId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, content })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({key, content, tier, tags})
             });
         } else {
-            await fetch(`${API_BASE}/mcm-files`, {
+            await fetch('/mcp/memories', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, content })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({key, content, tier, tags, source: 'user'})
             });
         }
-
         hideModal();
-        loadMcmFiles();
+        loadMemories();
+        loadMCPStats();
     } catch (error) {
-        console.error('Error saving MCM file:', error);
-        alert('Failed to save. Please try again.');
+        alert('Failed to save memory');
     }
 }
 
-async function deleteMcm(id) {
-    if (!confirm('Are you sure you want to delete this context?')) return;
-
+async function deleteMemory(id) {
+    if (!confirm('Delete this memory?')) return;
     try {
-        await fetch(`${API_BASE}/mcm-files/${id}`, { method: 'DELETE' });
-        loadMcmFiles();
+        await fetch(`/mcp/memories/${id}`, {method: 'DELETE'});
+        loadMemories();
+        loadMCPStats();
     } catch (error) {
-        console.error('Error deleting MCM file:', error);
-        alert('Failed to delete. Please try again.');
+        alert('Failed to delete memory');
     }
 }
 
-// Sigil Actions
-function createSigil() {
-    document.getElementById('sigil-name').value = '';
-    document.getElementById('sigil-provider').value = 'lm-studio';
-    document.getElementById('sigil-key').value = '';
-    showModal('sigil-modal');
-}
-
-async function saveSigil() {
-    const name = document.getElementById('sigil-name').value.trim();
-    const provider = document.getElementById('sigil-provider').value;
-    const api_key = document.getElementById('sigil-key').value;
-
-    if (!name || !api_key) {
-        alert('Please fill in all fields');
-        return;
-    }
-
-    try {
-        await fetch(`${API_BASE}/sigils`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, provider, api_key })
+function initFilters() {
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            loadMemories(chip.dataset.tier === 'all' ? null : parseInt(chip.dataset.tier));
         });
-
-        hideModal();
-        loadSigils();
-    } catch (error) {
-        console.error('Error saving sigil:', error);
-        alert('Failed to save. Please try again.');
-    }
+    });
 }
 
-async function deleteSigil(id) {
-    if (!confirm('Are you sure you want to delete this API key?')) return;
-
+async function loadKeys() {
     try {
-        await fetch(`${API_BASE}/sigils/${id}`, { method: 'DELETE' });
-        loadSigils();
-    } catch (error) {
-        console.error('Error deleting sigil:', error);
-        alert('Failed to delete. Please try again.');
-    }
+        const response = await fetch('/keys');
+        const data = await response.json();
+        keys = data.keys || [];
+        const container = document.getElementById('keys-list');
+        if (container) {
+            container.innerHTML = keys.length ? keys.map(k => `
+                <div class="key-card">
+                    <span class="key-icon">🗝</span>
+                    <div class="key-name">${escapeHtml(k.name || '')}</div>
+                    <div class="key-provider">${k.provider || 'Unknown'}</div>
+                </div>
+            `).join('') : '<div class="empty-state"><p>No API keys</p></div>';
+        }
+    } catch (error) {}
 }
 
-// Modal Handling
+async function loadModels() {
+    try {
+        const response = await fetch('/models/recommended');
+        const data = await response.json();
+        const container = document.getElementById('recommended-models');
+        if (container && data.recommended) {
+            container.innerHTML = data.recommended.slice(0, 6).map(m => `
+                <div class="model-card">
+                    <h4>${escapeHtml(m.name)}</h4>
+                    <p>${escapeHtml(m.use_case)}</p>
+                    <span class="model-size">${m.size}</span>
+                </div>
+            `).join('');
+        }
+    } catch (error) {}
+}
+
 function initModals() {
-    // MCM Modal
-    document.getElementById('btn-create-mcm').addEventListener('click', createMcm);
-    document.getElementById('btn-save-mcm').addEventListener('click', saveMcm);
-    document.getElementById('btn-cancel-mcm').addEventListener('click', hideModal);
-
-    // Sigil Modal
-    document.getElementById('btn-add-sigil').addEventListener('click', createSigil);
-    document.getElementById('btn-save-sigil').addEventListener('click', saveSigil);
-    document.getElementById('btn-cancel-sigil').addEventListener('click', hideModal);
-
-    // Close buttons
-    document.querySelectorAll('.close-btn').forEach(btn => {
-        btn.addEventListener('click', hideModal);
+    // Memory modal
+    document.getElementById('btn-create-memory')?.addEventListener('click', () => openMemoryModal());
+    document.getElementById('btn-new-memory')?.addEventListener('click', () => openMemoryModal());
+    document.getElementById('btn-save-memory')?.addEventListener('click', saveMemory);
+    document.getElementById('btn-cancel-memory')?.addEventListener('click', hideModal);
+    
+    // Key modal
+    document.getElementById('btn-add-key')?.addEventListener('click', () => showModal('key-modal'));
+    document.getElementById('btn-save-key')?.addEventListener('click', async () => {
+        const name = document.getElementById('key-name').value.trim();
+        const value = document.getElementById('key-value').value;
+        const provider = document.getElementById('key-provider').value;
+        if (!name || !value) return;
+        await fetch('/keys', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name, value, provider, key_type: 'provider_api'})
+        });
+        hideModal();
+        loadKeys();
     });
-
-    // Close on overlay click
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) hideModal();
-    });
-
-    // Quick actions
-    document.getElementById('btn-new-context').addEventListener('click', () => {
-        switchView('grimoire');
-        createMcm();
-    });
-
-    document.getElementById('btn-refresh-providers').addEventListener('click', loadProviders);
+    document.getElementById('btn-cancel-key')?.addEventListener('click', hideModal);
+    
+    // Generic close handlers
+    document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', hideModal));
+    document.getElementById('modal-overlay')?.addEventListener('click', e => { if (e.target.id === 'modal-overlay') hideModal(); });
 }
 
-function showModal(modalId) {
-    modalOverlay.classList.remove('hidden');
-    document.getElementById(modalId).classList.remove('hidden');
+// Global functions
+window.openMemoryModal = openMemoryModal;
+window.deleteMemory = deleteMemory;
+
+function showModal(id) {
+    document.getElementById('modal-overlay')?.classList.remove('hidden');
+    document.getElementById(id)?.classList.remove('hidden');
 }
 
 function hideModal() {
-    modalOverlay.classList.add('hidden');
+    document.getElementById('modal-overlay')?.classList.add('hidden');
     document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
 }
 
-// Utilities
 function escapeHtml(text) {
+    if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-function formatDate(dateString) {
-    if (!dateString) return 'Unknown';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        year: 'numeric'
-    });
-}
-
-// Make functions available globally
-window.editMcm = editMcm;
-window.deleteMcm = deleteMcm;
-window.deleteSigil = deleteSigil;
+window.deleteKey = async function(id) {
+    await fetch(`/keys/${id}`, {method: 'DELETE'});
+    loadKeys();
+};

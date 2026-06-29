@@ -1,39 +1,42 @@
-/* RITUAL - Hermetic Theme Styles */
+/* RITUAL - Alchemical Theme Styles */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
 /* CSS Variables */
 :root {
-    --bg-primary: #0d0d1a;
-    --bg-secondary: #1a1a2e;
-    --bg-card: #16213e;
-    --bg-hover: #1f2b47;
-    
-    --accent-primary: #9b59b6;
-    --accent-secondary: #8e44ad;
-    --accent-glow: rgba(155, 89, 182, 0.4);
-    
-    --text-primary: #e8e8e8;
-    --text-secondary: #a0a0a0;
-    --text-muted: #666680;
-    
-    --border-color: #2a2a4a;
-    --border-glow: rgba(155, 89, 182, 0.3);
-    
-    --success: #27ae60;
-    --error: #e74c3c;
-    --warning: #f39c12;
-    
-    --font-main: 'Segoe UI', system-ui, sans-serif;
-    --font-mono: 'Consolas', 'Monaco', monospace;
-    
+    --bg-primary: #08080c;
+    --bg-secondary: #0e0e14;
+    --bg-card: #13131a;
+    --bg-hover: #1a1a24;
+    --bg-active: #22222e;
+
+    --accent-primary: #d4a853;
+    --accent-secondary: #cd7f32;
+    --accent-glow: rgba(212, 168, 83, 0.3);
+
+    --text-primary: #e8e4dc;
+    --text-secondary: #b8b4a8;
+    --text-muted: #6a6860;
+
+    --border-color: #2a2820;
+    --border-glow: rgba(212, 168, 83, 0.25);
+
+    --success: #66aa66;
+    --error: #cc6666;
+    --warning: #d4a853;
+
+    --font-display: 'Cinzel', serif;
+    --font-body: 'Cormorant Garamond', serif;
+    --font-mono: 'Consolas', monospace;
+
     --transition-fast: 0.15s ease;
     --transition-normal: 0.3s ease;
-    
+
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 12px;
-    
-    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
-    --shadow-glow: 0 0 20px var(--accent-glow);
+
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 30px rgba(212, 168, 83, 0.15);
 }
 
 /* Reset & Base */
@@ -44,11 +47,13 @@
 }
 
 body {
-    font-family: var(--font-main);
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    font-family: var(--font-body);
+    font-size: 18px;
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
     color: var(--text-primary);
     min-height: 100vh;
-    line-height: 1.6;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
 }
 
 /* App Container */
@@ -59,6 +64,152 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+}
+
+/* Splash Screen */
+#splash {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#splash.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content {
+    text-align: center;
+    animation: splashFadeIn 1.5s ease-out;
+}
+
+@keyframes splashFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ritual-logo {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+}
+
+.ritual-logo .logo-ring {
+    position: absolute;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.ritual-logo .ring-1 { inset: 0; animation: ringPulse 3s ease-in-out infinite; }
+.ritual-logo .ring-2 { inset: 15px; animation: ringPulse 3s ease-in-out infinite 0.5s; }
+.ritual-logo .ring-3 { inset: 30px; animation: ringPulse 3s ease-in-out infinite 1s; }
+
+@keyframes ringPulse {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.05); }
+}
+
+.ritual-logo .logo-symbol {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--accent-primary);
+    text-shadow: 0 0 30px var(--accent-glow);
+}
+
+.splash-title {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 40px var(--accent-glow);
+}
+
+.splash-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    margin-bottom: 2rem;
+}
+
+.splash-tiers {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tier-label {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+/* Ritual Logo Small */
+.ritual-logo-small {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+    border-radius: 50%;
+}
+
+.ritual-logo-small .logo-symbol {
+    font-size: 1.25rem;
+    color: var(--bg-primary);
+}
+
+/* App Header */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.app-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--accent-primary);
+}
+
+.header-center h2 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 /* Header */
@@ -670,4 +821,136 @@ body {
     .mcm-grid, .sigils-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Hidden utility */
+.hidden {
+    display: none !important;
+}
+
+/* Login Screen */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    padding: 2rem;
+}
+
+.login-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.login-card .ritual-logo-large {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card .ritual-logo-large .logo-symbol {
+    font-size: 2.5rem;
+    color: var(--bg-primary);
+}
+
+.login-card h1 {
+    font-size: 1.75rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.login-card > p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.btn-github {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background: #24292e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-github:hover {
+    background: #2f363d;
+    transform: translateY(-1px);
+}
+
+.login-hint {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 8px;
+}
+
+.login-hint p {
+    color: var(--accent-gold);
+    margin-bottom: 0.25rem;
+}
+
+.login-hint small {
+    color: var(--text-muted);
+}
+
+.login-features {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.feature-icon {
+    font-size: 1.25rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--bg-hover);
+    border-radius: 20px;
+    margin-right: 0.5rem;
+}
+
+.user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.user-name {
+    font-size: 0.85rem;
+    color: var(--text-primary);
 }

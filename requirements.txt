@@ -8,8 +8,10 @@ cryptography==41.0.7
 requests==2.31.0
 slowapi==0.1.9
 
-# Development Dependencies
-pytest>=7.4.0
+# Model Inference (optional - install separately as needed)
+# llama-cpp-python>=0.2.0  # For local llama.cpp inference
+# transformers>=4.35.0       # For HuggingFace transformers inference
+# bitsandbytes>=0.41.0       # For quantization support
 pytest-cov>=4.1.0
 httpx>=0.25.0
 black>=23.0.0
